@@ -219,31 +219,33 @@ class Dispatcher:
                 async with lock:
                     for group in self.groups.values():
                         for handler in group:
-                            args = None
+                            args, kwargs = None, {}
 
                             if isinstance(handler, handler_type):
                                 try:
                                     if await handler.check(self.client, parsed_update):
                                         args = (parsed_update,)
+
                                 except Exception as e:
                                     log.exception(e)
                                     continue
 
                             elif isinstance(handler, RawUpdateHandler):
-                                args = (update, users, chats)
+                                args = (update,)
+                                kwargs = {"users": users, "chats": chats}
 
                             if args is None:
                                 continue
 
                             try:
+                                kwargs['client'] = self.client  # Don't give client if it's not in callback.args
+                                kwargs = handler.filter_data(kwargs)
                                 if inspect.iscoroutinefunction(handler.callback):
-                                    await handler.callback(self.client, *args)
+                                    await handler.callback(*args, **kwargs)
                                 else:
                                     await self.loop.run_in_executor(
                                         self.client.executor,
-                                        handler.callback,
-                                        self.client,
-                                        *args
+                                        lambda: handler.callback(*args, **kwargs)
                                     )
                             except pyrogram.StopPropagation:
                                 raise

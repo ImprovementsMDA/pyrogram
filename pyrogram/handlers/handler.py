@@ -28,6 +28,13 @@ class Handler:
     def __init__(self, callback: Callable, filters: Filter = None):
         self.callback = callback
         self.filters = filters
+        self._spec = self._get_spec()
+
+    def _get_spec(self):
+        func = self.callback
+        while hasattr(func, '__wrapped__'):  # Try to resolve decorated callbacks
+            func = func.__wrapped__
+        return inspect.getfullargspec(func)
 
     async def check(self, client: "pyrogram.Client", update: Update):
         if callable(self.filters):
@@ -41,3 +48,11 @@ class Handler:
                 )
 
         return True
+
+    def filter_data(self, data: dict):
+        if self._spec.varkw:
+            return data
+
+        new = {k: v for k, v in data.items() if k in set(self._spec.args + self._spec.kwonlyargs)}
+        return new
+
