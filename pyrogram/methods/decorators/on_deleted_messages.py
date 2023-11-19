@@ -20,7 +20,7 @@ from typing import Callable
 
 import pyrogram
 from pyrogram.filters import Filter
-from pyrogram.filters.state import State
+from pyrogram.filters.state import State, any_state
 
 
 class OnDeletedMessages:
@@ -28,7 +28,7 @@ class OnDeletedMessages:
         self=None,
         filters=None,
         group: int = 0,
-        state: State | None = None
+        state: State | None = any_state
     ) -> Callable:
         """Decorator for handling deleted messages.
 

@@ -34,6 +34,7 @@ from .dialog import Dialog
 from .emoji_status import EmojiStatus
 from .invite_link_importer import InviteLinkImporter
 from .restriction import Restriction
+from .read_history_update import ReadHistoryInbox, ReadHistoryOutbox
 from .user import User
 from .video_chat_ended import VideoChatEnded
 from .video_chat_members_invited import VideoChatMembersInvited
@@ -63,5 +64,7 @@ __all__ = [
     "ChatPrivileges",
     "ChatJoiner",
     "EmojiStatus",
-    "ChatReactions"
+    "ChatReactions",
+    "ReadHistoryInbox",
+    "ReadHistoryOutbox"
 ]

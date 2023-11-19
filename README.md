@@ -32,10 +32,23 @@ from pyrogram import Client, filters
 app = Client("my_account")
 
 
+# Deprecated:
 @app.on_message(filters.private)
 async def hello(client, message):
     await message.reply("Hello from Pyrogram!")
 
+
+# New:
+@app.on_message(filters.private)
+async def hello(message):
+    ...
+or:
+async def hello(message)
+    ...
+or:
+async def hello(message, client, state)
+    ...
+*First arg of function should always take an update
 
 app.run()
 ```

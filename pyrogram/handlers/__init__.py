@@ -27,4 +27,6 @@ from .inline_query_handler import InlineQueryHandler
 from .message_handler import MessageHandler
 from .poll_handler import PollHandler
 from .raw_update_handler import RawUpdateHandler
+from .read_history_inbox_handler import ReadHistoryInboxHandler
+from .read_history_outbox_handler import ReadHistoryOutboxHandler
 from .user_status_handler import UserStatusHandler

@@ -53,6 +53,9 @@ class Handler:
         if isinstance(update, pyrogram.types.User):
             user_id = update.id
 
+        elif isinstance(update, (pyrogram.types.ReadHistoryInbox, pyrogram.types.ReadHistoryOutbox)):
+            user_id = update.peer.user_id
+
         else:
             if hasattr(update, 'from_user') and isinstance(update.from_user, pyrogram.types.User):
                 user_id = update.from_user.id

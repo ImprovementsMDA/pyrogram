@@ -19,7 +19,7 @@
 from typing import Callable
 
 from .handler import Handler
-from pyrogram.filters.state import State
+from pyrogram.filters.state import State, any_state
 
 
 class PollHandler(Handler):
@@ -47,5 +47,5 @@ class PollHandler(Handler):
             The received poll.
     """
 
-    def __init__(self, callback: Callable, filters=None, state: State | None = None):
-        super().__init__(callback, filters)
+    def __init__(self, callback: Callable, filters=None, state: State | None = any_state):
+        super().__init__(callback, filters, state)

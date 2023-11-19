@@ -28,6 +28,8 @@ from .on_message import OnMessage
 from .on_poll import OnPoll
 from .on_raw_update import OnRawUpdate
 from .on_user_status import OnUserStatus
+from .on_read_history_inbox import OnReadHistoryInbox
+from .on_read_history_outbox import OnReadHistoryOutbox
 
 
 class Decorators(
@@ -42,6 +44,8 @@ class Decorators(
     OnPoll,
     OnChosenInlineResult,
     OnChatMemberUpdated,
-    OnChatJoinRequest
+    OnChatJoinRequest,
+    OnReadHistoryInbox,
+    OnReadHistoryOutbox
 ):
     pass

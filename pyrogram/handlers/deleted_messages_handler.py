@@ -22,7 +22,7 @@ import pyrogram
 from pyrogram.filters import Filter
 from pyrogram.types import Message
 from .handler import Handler
-from pyrogram.filters.state import State
+from pyrogram.filters.state import State, any_state
 
 
 class DeletedMessagesHandler(Handler):
@@ -52,7 +52,7 @@ class DeletedMessagesHandler(Handler):
     def __init__(self,
                  callback: Callable,
                  filters: Filter = None,
-                 state: State | None = None
+                 state: State | None = any_state
                  ):
         super().__init__(callback, filters, state)
 
