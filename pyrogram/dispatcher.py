@@ -23,6 +23,7 @@ from collections import OrderedDict
 
 import pyrogram
 from pyrogram import utils
+from pyrogram.fsm_storage import BaseStorage, DisabledStorage, FSMContext
 from pyrogram.handlers import (
     CallbackQueryHandler, MessageHandler, EditedMessageHandler, DeletedMessagesHandler,
     UserStatusHandler, RawUpdateHandler, InlineQueryHandler, PollHandler,
@@ -53,8 +54,11 @@ class Dispatcher:
     CHOSEN_INLINE_RESULT_UPDATES = (UpdateBotInlineSend,)
     CHAT_JOIN_REQUEST_UPDATES = (UpdateBotChatInviteRequester,)
 
-    def __init__(self, client: "pyrogram.Client"):
+    IGNORE_STATE_UPDATE = [UpdateMessagePoll]
+
+    def __init__(self, client: "pyrogram.Client", fsm_storage: BaseStorage | None):
         self.client = client
+        self.fsm_storage = fsm_storage if fsm_storage is not None else DisabledStorage()
         self.loop = asyncio.get_event_loop()
 
         self.handler_worker_tasks = []
@@ -219,6 +223,9 @@ class Dispatcher:
                 async with lock:
                     for group in self.groups.values():
                         for handler in group:
+                            if parsed_update is not None and type(update) not in self.IGNORE_STATE_UPDATE and\
+                                    (fsm_context := await handler.check_by_state(parsed_update, self.fsm_storage)) is None:
+                                continue
                             args, kwargs = None, {}
 
                             if isinstance(handler, handler_type):
@@ -239,6 +246,8 @@ class Dispatcher:
 
                             try:
                                 kwargs['client'] = self.client  # Don't give client if it's not in callback.args
+                                if isinstance(fsm_context, FSMContext):
+                                    kwargs['state'] = fsm_context
                                 kwargs = handler.filter_data(kwargs)
                                 if inspect.iscoroutinefunction(handler.callback):
                                     await handler.callback(*args, **kwargs)

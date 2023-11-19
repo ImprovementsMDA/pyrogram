@@ -51,6 +51,7 @@ from pyrogram.methods import Methods
 from pyrogram.session import Auth, Session
 from pyrogram.storage import FileStorage, MemoryStorage
 from pyrogram.types import User, TermsOfService
+from pyrogram.fsm_storage import BaseStorage
 from pyrogram.utils import ainput
 from .dispatcher import Dispatcher
 from .file_id import FileId, FileType, ThumbnailSource
@@ -225,7 +226,8 @@ class Client(Methods):
         takeout: bool = None,
         sleep_threshold: int = Session.SLEEP_THRESHOLD,
         hide_password: bool = False,
-        max_concurrent_transmissions: int = MAX_CONCURRENT_TRANSMISSIONS
+        max_concurrent_transmissions: int = MAX_CONCURRENT_TRANSMISSIONS,
+        fsm_storage: BaseStorage | None = None
     ):
         super().__init__()
 
@@ -264,7 +266,7 @@ class Client(Methods):
         else:
             self.storage = FileStorage(self.name, self.workdir)
 
-        self.dispatcher = Dispatcher(self)
+        self.dispatcher = Dispatcher(self, fsm_storage)
 
         self.rnd_id = MsgId
 

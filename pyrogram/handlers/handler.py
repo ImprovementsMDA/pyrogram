@@ -23,11 +23,20 @@ import pyrogram
 from pyrogram.filters import Filter
 from pyrogram.types import Update
 
+from pyrogram.filters.state import State, any_state
+from pyrogram.fsm_storage import BaseStorage, FSMContext
+from pyrogram.utils.deprecated import warn_deprecated as warn
+
 
 class Handler:
-    def __init__(self, callback: Callable, filters: Filter = None):
+    def __init__(self,
+                 callback: Callable,
+                 filters: Filter = None,
+                 state: State | None = None
+                 ):
         self.callback = callback
         self.filters = filters
+        self.state = state
         self._spec = self._get_spec()
 
     def _get_spec(self):
@@ -35,6 +44,34 @@ class Handler:
         while hasattr(func, '__wrapped__'):  # Try to resolve decorated callbacks
             func = func.__wrapped__
         return inspect.getfullargspec(func)
+
+    async def check_by_state(self, update: Update, storage: BaseStorage) -> FSMContext | None:
+        """FSMContext if can go next code, else will skip current handler"""
+        chat_id = None
+        user_id = None
+
+        if isinstance(update, pyrogram.types.User):
+            user_id = update.id
+
+        else:
+            if hasattr(update, 'from_user') and isinstance(update.from_user, pyrogram.types.User):
+                user_id = update.from_user.id
+
+            if hasattr(update, 'chat') and isinstance(update.chat, pyrogram.types.Chat):
+                chat_id = update.chat.id
+                if update.chat.type.value == pyrogram.enums.ChatType.PRIVATE:
+                    user_id = chat_id
+
+        if chat_id is None and user_id is None:
+            warn(f"{type(update)} in getting state has 2 None values: {chat_id=} {user_id=}.\nFull-info: {update}")
+            return None
+
+        if self.state is not None and self.state.state == any_state:
+            return FSMContext(storage, chat=chat_id, user=user_id)
+
+        state = await storage.get_state(chat=chat_id, user=user_id)
+        if state == (self.state.state if self.state is not None else None):
+            return FSMContext(storage, chat=chat_id, user=user_id)
 
     async def check(self, client: "pyrogram.Client", update: Update):
         if callable(self.filters):

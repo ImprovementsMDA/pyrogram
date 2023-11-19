@@ -1,0 +1,2 @@
+class FSMStorageWarning(Warning):
+    pass

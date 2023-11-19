@@ -19,6 +19,7 @@
 from typing import Callable
 
 from .handler import Handler
+from pyrogram.filters.state import State
 
 
 class MessageHandler(Handler):
@@ -45,5 +46,9 @@ class MessageHandler(Handler):
             The received message.
     """
 
-    def __init__(self, callback: Callable, filters=None):
-        super().__init__(callback, filters)
+    def __init__(self,
+                 callback: Callable,
+                 filters=None,
+                 state: State | None = None
+                 ):
+        super().__init__(callback, filters, state)

@@ -20,13 +20,16 @@ from typing import Callable
 
 import pyrogram
 from pyrogram.filters import Filter
+from pyrogram.filters.state import State, any_state
 
 
 class OnMessage:
     def on_message(
         self=None,
         filters=None,
-        group: int = 0
+        group: int = 0,
+        state: State | None = any_state
+
     ) -> Callable:
         """Decorator for handling new messages.
 
@@ -40,18 +43,20 @@ class OnMessage:
 
             group (``int``, *optional*):
                 The group identifier, defaults to 0.
+
+            state (:obj:`pyrogram.filters.state.State`, *optional*):
         """
 
         def decorator(func: Callable) -> Callable:
             if isinstance(self, pyrogram.Client):
-                self.add_handler(pyrogram.handlers.MessageHandler(func, filters), group)
+                self.add_handler(pyrogram.handlers.MessageHandler(func, filters, state), group)
             elif isinstance(self, Filter) or self is None:
                 if not hasattr(func, "handlers"):
                     func.handlers = []
 
                 func.handlers.append(
                     (
-                        pyrogram.handlers.MessageHandler(func, self),
+                        pyrogram.handlers.MessageHandler(func, self, state),
                         group if filters is None else filters
                     )
                 )

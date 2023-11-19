@@ -22,6 +22,7 @@ import pyrogram
 from pyrogram.filters import Filter
 from pyrogram.types import Message
 from .handler import Handler
+from pyrogram.filters.state import State
 
 
 class DeletedMessagesHandler(Handler):
@@ -48,8 +49,12 @@ class DeletedMessagesHandler(Handler):
             The deleted messages, as list.
     """
 
-    def __init__(self, callback: Callable, filters: Filter = None):
-        super().__init__(callback, filters)
+    def __init__(self,
+                 callback: Callable,
+                 filters: Filter = None,
+                 state: State | None = None
+                 ):
+        super().__init__(callback, filters, state)
 
     async def check(self, client: "pyrogram.Client", messages: List[Message]):
         # Every message should be checked, if at least one matches the filter True is returned
