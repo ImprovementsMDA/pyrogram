@@ -16,7 +16,7 @@ __all__ = ["BaseMessage",
 class BaseMessage:
     parse_mode: Optional[ParseMode] = field(validator=type_validator, default=None)
     triggers: List[Trigger] = field(validator=type_validator, factory=list)
-    delay_before_sending: int = field(init=False, default=None)
+    delay_before_sending: int = field(init=True, default=0)
 
     @staticmethod
     def get_text(text_attr: Text | None | TextsDP):

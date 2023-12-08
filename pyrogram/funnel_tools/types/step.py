@@ -35,6 +35,15 @@ class Step:
     async def on_finish(self) -> None:
         """It's being called when step is finished and can turn on next"""
         raise NotImplementedError
+    
+    def next_step(self) -> "Step":
+        current_step_index = self._group.steps.index(self)
+        try:
+            return self._group.steps[current_step_index + 1]
+        
+        except:
+            return None
+
 
 
 class StepsGroupMeta(type):
