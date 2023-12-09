@@ -63,6 +63,13 @@ class StepsGroupMeta(type):
         cls._steps_uid = tuple(step.uid for step in steps)
 
         return cls
+    
+    def get_step_by_uid(cls, uid: str) -> Step:
+        for step in cls.steps:
+            if step.uid == uid:
+                return step
+            
+        raise AttributeError(f"Step with uid:{uid} not exist")
 
     @property
     def __group_name__(cls) -> str:
@@ -85,7 +92,6 @@ class StepsGroupMeta(type):
 
     def __str__(self):
         return f"<StepsGroup '{self.__group_name__}'>"
-
-
+    
 class StepsGroup(metaclass=StepsGroupMeta):
     ...
