@@ -14,6 +14,8 @@ class MessagesList:
             delay = 0
         message.delay_before_sending = delay
         self._messages.append(message)
+        
+        return self
 
     def __str__(self):
         return str(self._messages)
