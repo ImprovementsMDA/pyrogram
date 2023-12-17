@@ -19,11 +19,20 @@ class TextsDP:
     texts: list[Text]
     dispatching_type: DispatchingTextType
 
-    def get_text(self, tag: str | None = None) -> Text:
+    def __filter_by_tags(self, user_tags: list[str] = None) -> list[Text]:
         # Filter by tags
-        texts = [text for text in self.texts if text.tag == tag] if tag is not None else self.texts
+        _texts_with_tags = [text for text in self.texts if text.tag]
+        if _texts_with_tags:
+            texts = [text for text in self.texts if text.tag in user_tags]
+        else:
+            texts = self.texts
+        return texts
+
+    def get_text(self, user_tags: list[str] = None) -> Text:
+        texts = self.__filter_by_tags(user_tags)
+
         if not texts:
-            raise ValueError(f"No texts with current tag: {tag=}")
+            raise ValueError(f"No texts found.")
 
         if self.dispatching_type == DispatchingTextType.random:
             return random.choice(texts)

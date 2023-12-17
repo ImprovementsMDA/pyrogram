@@ -3,7 +3,7 @@ from pathlib import Path
 from pyrogram.enums import ParseMode, MessageMediaType
 from typing import Optional, List
 
-from . import Text, TextsDP, Trigger
+from . import Text, TextsDP, BaseTrigger
 from pyrogram.funnel_tools.utils.attrs_validators import *
 
 
@@ -15,7 +15,7 @@ __all__ = ["BaseMessage",
 @define(kw_only=True)
 class BaseMessage:
     parse_mode: Optional[ParseMode] = field(validator=type_validator, default=None)
-    triggers: List[Trigger] = field(validator=type_validator, factory=list)
+    triggers: List[BaseTrigger] = field(validator=type_validator, factory=list)
     delay_before_sending: int = field(init=False, default=0)
 
     @staticmethod
