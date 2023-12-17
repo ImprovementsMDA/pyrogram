@@ -1,9 +1,8 @@
 from attrs import define, field
 from sqlalchemy import ColumnElement
 
-from . import MessagesList
-from . import BaseTrigger
-
+from . import MessagesList, BaseTrigger
+from pyrogram.funnel_tools.utils.attrs_validators import *
 
 __all__ = ["Step", "StepsGroup"]
 
@@ -12,7 +11,7 @@ __all__ = ["Step", "StepsGroup"]
 class Step:
     uid: str = field(init=True)
     messages: MessagesList = field(init=True)
-    triggers: list[BaseTrigger] = field(init=True, default=None)
+    triggers: list[BaseTrigger] = field(validator=type_validator, factory=list)
 
     name = field(init=False, default=None)
     _group = field(init=False, default=None)
