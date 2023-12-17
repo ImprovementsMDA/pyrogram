@@ -1,5 +1,7 @@
 from attrs import define, field
 
+from . import SetAttrs
+
 
 __all__ = ["Text"]
 
@@ -9,6 +11,7 @@ class Text:
     value: str | None
     count: int = field(init=False, default=0)
     tag: str = field(default=None)
+    set_attrs: SetAttrs = field(default=None)
 
     def success_sent(self, **on_success_kwargs):
         self.count += 1

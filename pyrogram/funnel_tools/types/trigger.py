@@ -46,7 +46,7 @@ class PayedTrigger(BaseTrigger):
 
     type: TriggerType = field(init=False, default=TriggerType.PAYED)
     priority: int = field(init=False, default=10)
-    filters: Optional[pyro_f.Filter | None] = field(validator=type_validator, default=(pyro_f.text | pyro_f.caption) & pyro_f.outgoing)
+    filters: Optional[pyro_f.Filter] = field(validator=type_validator, default=(pyro_f.text | pyro_f.caption) & pyro_f.outgoing)
 
 
 @define(kw_only=True)
@@ -59,5 +59,5 @@ class ExpectTrigger(PayedTrigger):
 class FunnelMsgTrigger(BaseTrigger):
     type: TriggerType = field(default=TriggerType.CANCEL_FUNNEL_MSG)
     priority: int = field(init=False, default=5)
-    filters: Optional[pyro_f.Filter | None] = field(validator=type_validator, default=(pyro_f.text | pyro_f.caption) & pyro_f.outgoing)
+    filters: Optional[pyro_f.Filter] = field(validator=type_validator, default=(pyro_f.text | pyro_f.caption) & pyro_f.outgoing)
 
