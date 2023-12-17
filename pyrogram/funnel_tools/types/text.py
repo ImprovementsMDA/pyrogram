@@ -11,3 +11,10 @@ class Text:
 
     def success_sent(self):
         self.count += 1
+
+    def __str__(self):
+        if self.value is None:
+            return ''
+        return self.value
+
+    __repr__ = __str__

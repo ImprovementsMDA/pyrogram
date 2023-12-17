@@ -45,7 +45,6 @@ class Step:
             return None
 
 
-
 class StepsGroupMeta(type):
     def __new__(mcs, name, bases, namespace, **kwargs):
         cls = super(StepsGroupMeta, mcs).__new__(mcs, name, bases, namespace)

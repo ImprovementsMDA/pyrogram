@@ -22,6 +22,8 @@ class TextsDP:
     def get_text(self) -> Text:
         if self.dispatching_type == DispatchingTextType.random:
             return random.choice(self.texts)
+
         elif self.dispatching_type == DispatchingTextType.equally:
             return min(self.texts, key=lambda text: text.count)
+
         raise ValueError(f"Incorrect {self.dispatching_type.value=}")

@@ -9,7 +9,7 @@ class MessagesList:
     def __init__(self):
         self._messages: list[BaseMessage] = []
 
-    def append(self, message: BaseMessage, delay: int | float | None = None) -> None:
+    def append(self, message: BaseMessage, delay: int | float | None = None) -> "MessagesList":
         if delay is None:
             delay = 0
         message.delay_before_sending = delay

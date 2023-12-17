@@ -27,7 +27,7 @@ class BaseMessage:
 
 @define
 class SimpleMessage(BaseMessage):
-    _text: Optional[Text | str] = field(validator=type_validator, default=None)
+    _text: Optional[Text | TextsDP | str] = field(validator=type_validator, default=None)
 
     def __attrs_post_init__(self):
         if isinstance(self._text, str) or self._text is None:
