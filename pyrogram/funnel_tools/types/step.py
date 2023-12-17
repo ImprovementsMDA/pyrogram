@@ -2,6 +2,7 @@ from attrs import define, field
 from sqlalchemy import ColumnElement
 
 from . import MessagesList
+from . import BaseTrigger
 
 
 __all__ = ["Step", "StepsGroup"]
@@ -11,6 +12,7 @@ __all__ = ["Step", "StepsGroup"]
 class Step:
     uid: str = field(init=True)
     messages: MessagesList = field(init=True)
+    triggers: list[BaseTrigger] = field(init=True, default=None)
 
     name = field(init=False, default=None)
     _group = field(init=False, default=None)
@@ -91,6 +93,7 @@ class StepsGroupMeta(type):
 
     def __str__(self):
         return f"<StepsGroup '{self.__group_name__}'>"
-    
+
+
 class StepsGroup(metaclass=StepsGroupMeta):
     ...

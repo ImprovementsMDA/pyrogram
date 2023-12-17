@@ -17,10 +17,11 @@ class SetAttrs:
         if isinstance(self.tags, str):
             self.tags = [self.tags]
 
-    def set(self, user):
+    async def set(self, user):
         if not isinstance(self.tags, _Undefined):
             for tag in self.tags:
                 user.tags.append(tag)
 
         if not isinstance(self.status, _Undefined):
-            user.status = self.status
+            await user.awaitable_attrs.data
+            user.data.status = self.status
