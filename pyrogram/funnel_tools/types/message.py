@@ -42,11 +42,12 @@ class SimpleMessage(BaseMessage):
     def get_text(self, user_tags: list[str]):
         return super().get_text(self._text, user_tags)
 
-    async def send(self, client: Client, user_id: int, user_tags: list[str]):
+    async def send(self, client: Client, user):
         await asyncio.sleep(self.delay_before_sending)
 
-        text = self.get_text(user_tags)
-        await client.send_message(user_id, text=str(text), parse_mode=self.parse_mode)
+        text = self.get_text(user.tags)
+        await client.send_message(user.id, text=str(text), parse_mode=self.parse_mode)
+        text.success_sent(user)
 
 
 @define()
@@ -56,21 +57,21 @@ class MediaMessage(BaseMessage):
     caption: Optional[Text | str] = field(validator=type_validator, default=None)
 
     # noinspection PyMethodOverriding
-    def get_text(self):
-        return super().get_text(self.caption)
+    def get_text(self, tags: list[str]):
+        return super().get_text(self.caption, tags)
 
     def __attrs_post_init__(self):
         if isinstance(self.caption, str) or self.caption is None:
             self.caption = Text(self.caption)
 
-    async def send(self, client: Client, user_id: int):
+    async def send(self, client: Client, user):
         await asyncio.sleep(self.delay_before_sending)
 
         _type = MessageMediaType
 
-        default_args = (user_id, self.media_path)
+        default_args = (user.id, self.media_path)
         default_kwargs = {'parse_mode': self.parse_mode}
-        text = self.get_text()
+        text = self.get_text(user.tags)
 
         if self.media_type == _type.AUDIO:
             await client.send_audio(*default_args, caption=str(text), **default_kwargs)
@@ -82,3 +83,5 @@ class MediaMessage(BaseMessage):
             await client.send_video_note(*default_args)
         else:
             raise NotImplementedError(f"For {self.media_type} didn't make function")
+        
+        text.success_sent(user)

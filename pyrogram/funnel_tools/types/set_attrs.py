@@ -20,7 +20,7 @@ class SetAttrs:
     async def set(self, user):
         if not isinstance(self.tags, _Undefined):
             for tag in self.tags:
-                user.tags.append(tag)
+                user.add_tag(tag)
 
         if not isinstance(self.status, _Undefined):
             await user.awaitable_attrs.data

@@ -13,11 +13,10 @@ class Text:
     tag: str = field(default=None)
     set_attrs: SetAttrs = field(default=None)
 
-    def success_sent(self, **on_success_kwargs):
+    def success_sent(self, user):
         self.count += 1
-        if self.tag is not None:
-            user = on_success_kwargs['user']
-            user.tags.append(self.tag)
+        if self.set_attrs is not None:
+            self.set_attrs.set(user)
 
     def __str__(self):
         if self.value is None:
