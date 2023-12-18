@@ -45,7 +45,7 @@ class SimpleMessage(BaseMessage):
     async def send(self, client: Client, user):
         await asyncio.sleep(self.delay_before_sending)
 
-        text = self.get_text(user.tags)
+        text = self.get_text([tag.tag for tag in user.tags])
         await client.send_message(user.id, text=str(text), parse_mode=self.parse_mode)
         text.success_sent(user)
 
@@ -71,7 +71,7 @@ class MediaMessage(BaseMessage):
 
         default_args = (user.id, self.media_path)
         default_kwargs = {'parse_mode': self.parse_mode}
-        text = self.get_text(user.tags)
+        text = self.get_text([tag.tag for tag in user.tags])
 
         if self.media_type == _type.AUDIO:
             await client.send_audio(*default_args, caption=str(text), **default_kwargs)
