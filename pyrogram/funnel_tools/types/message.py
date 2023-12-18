@@ -30,7 +30,7 @@ class BaseMessage:
         return text_attr
 
 
-@define(kw_only=True)
+@define()
 class SimpleMessage(BaseMessage):
     _text: Optional[Text | TextsDP | str] = field(validator=type_validator, default=None)
 
@@ -49,19 +49,19 @@ class SimpleMessage(BaseMessage):
         await client.send_message(user_id, text=str(text), parse_mode=self.parse_mode)
 
 
-@define(kw_only=True)
+@define()
 class MediaMessage(BaseMessage):
     media_type: MessageMediaType = field(validator=type_validator)
     media_path: Path = field(validator=[type_validator, check_path_exists])
-    _caption: Optional[Text | str] = field(validator=type_validator, default=None)
+    caption: Optional[Text | str] = field(validator=type_validator, default=None)
 
     # noinspection PyMethodOverriding
     def get_text(self):
-        return super().get_text(self._caption)
+        return super().get_text(self.caption)
 
     def __attrs_post_init__(self):
-        if isinstance(self._caption, str) or self._caption is None:
-            self._caption = Text(self._caption)
+        if isinstance(self.caption, str) or self.caption is None:
+            self.caption = Text(self.caption)
 
     async def send(self, client: Client, user_id: int):
         await asyncio.sleep(self.delay_before_sending)

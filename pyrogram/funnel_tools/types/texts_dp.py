@@ -23,7 +23,9 @@ class TextsDP:
         # Filter by tags
         _texts_with_tags = [text for text in self.texts if text.tag]
         if _texts_with_tags:
-            texts = [text for text in self.texts if text.tag in user_tags]
+            texts = [text for text in _texts_with_tags if text.tag in user_tags]
+            if not texts:
+                texts = [text for text in self.texts if text.tag is None]  # returns texts without tags
         else:
             texts = self.texts
         return texts

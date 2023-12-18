@@ -7,8 +7,10 @@ from enum import Enum, auto
 from pyrogram.funnel_tools.utils.attrs_validators import type_validator
 
 
-__all__ = ["BaseTrigger",
+__all__ = ["TriggerType",
+           "BaseTrigger",
            "PayedTrigger",
+           "ExpectTrigger",
            "FunnelMsgTrigger"]
 
 

@@ -1,3 +1,5 @@
+import typing
+
 from attrs import define, field
 from sqlalchemy import ColumnElement
 
@@ -29,20 +31,21 @@ class Step:
         """SQLAlchemy requirements to get users for sending messages"""
         raise NotImplementedError
 
-    async def is_finished(self) -> None:
+    async def is_finished(self, current_msg_id: int) -> bool:
         """Going to the next step then"""
-        raise NotImplementedError
+        if current_msg_id == len(self.messages) - 1:
+            return True
+        return False
 
     async def on_finish(self) -> None:
         """It's being called when step is finished and can turn on next"""
-        raise NotImplementedError
+        ...
     
-    def next_step(self) -> "Step":
+    def next_step(self) -> typing.Optional["Step"]:
         current_step_index = self._group.steps.index(self)
         try:
             return self._group.steps[current_step_index + 1]
-        
-        except:
+        except IndexError:
             return None
 
 

@@ -9,7 +9,10 @@ class MessagesList:
     def __init__(self):
         self._messages: list[BaseMessage] = []
 
-    def __getitem__(self, item: int):
+    def __len__(self):
+        return len(self._messages)
+
+    def __getitem__(self, item: int | slice):
         return self._messages[item]
 
     def append(self, message: BaseMessage, delay: int | float | None = None) -> "MessagesList":
