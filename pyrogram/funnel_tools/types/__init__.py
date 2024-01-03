@@ -1,3 +1,5 @@
+print("CURRENT PYRO")
+
 from .set_attrs import SetAttrs
 from .text import *
 from .texts_dp import *

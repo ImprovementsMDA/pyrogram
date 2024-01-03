@@ -26,7 +26,7 @@ class BaseTrigger:
     trigger-phrase
     priority
     """
-    type: Optional[TriggerType] = field(default=None)
+    type: Optional[TriggerType] = field(default="")
     phrase: str = field(validator=type_validator)
     case_ignore: bool = field(validator=type_validator, default=True)
     priority: int = field(validator=type_validator, default=0)

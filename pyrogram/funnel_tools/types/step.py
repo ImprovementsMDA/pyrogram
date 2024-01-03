@@ -33,7 +33,7 @@ class Step:
 
     async def is_finished(self, current_msg_id: int) -> bool:
         """Going to the next step then"""
-        if current_msg_id == len(self.messages) - 1:
+        if current_msg_id == len(self.messages):
             return True
         return False
 
